@@ -1,0 +1,6 @@
+The aim of the project is to identify the structural domains of a given protein. 
+The protein PDB file can be imported from locally or from the PDB database. 
+The program calculates the least connected parts in the protein and plots the results on the GUI. 
+The workload is distributed evenly, but Orsolya will be mainly responsible for the GUI implementation, 
+while István will be responsible for the domain finder algorithm implementation. 
+For version control and cooperative work, GitHub will be used. 
