@@ -1,5 +1,6 @@
 import sys
 import os
+import fnmatch
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
@@ -12,56 +13,92 @@ from PyQt5.QtCore import *
 
 from Bio.PDB import *
 
-def main():
-	app = QApplication(sys.argv)
+from domain import Domain
 
-	window = QWidget()
-	window.setWindowTitle('Protein Domain Identifier')
-	window.setGeometry(500,100,580,250)
-	window.move(200,200)
+class MainWindow():
 
-	menubar = QMenuBar()
-	
+	def __init__(self):
+		self.protein_list = []
+		self.actualprot = None
 
-	layout = QVBoxLayout()
+	def main(self):
+		app = QApplication(sys.argv)
 
-	layout.setMenuBar(menubar)
-	file = menubar.addMenu("File")
-	open_ = file.addAction("Open")
-	exit = file.addAction("Exit")
-	open_.triggered.connect(openPDB)
-	exit.triggered.connect(lambda: exitProgram(app))
+		
 
-	msg = QLabel('Welcome! Open a PDB file!',parent=window)
-	msg.setAlignment(Qt.AlignCenter)
+		window = QWidget()
+		window.setWindowTitle('Protein Domain Identifier')
+		window.setGeometry(500,100,580,250)
+		window.move(200,200)
 
-	textbox = QLineEdit()
-	button = QPushButton("Get PDB")
+		menubar = QMenuBar()
+		
 
-	button.clicked.connect(lambda: openPDB(textbox.text()))
+		layout = QVBoxLayout()
 
-	layout.addWidget(msg)
-	layout.addWidget(textbox)
-	layout.addWidget(button)
+		layout.setMenuBar(menubar)
+		file = menubar.addMenu("File")
+		open_ = file.addAction("Open")
+		exit = file.addAction("Exit")
+		open_.triggered.connect(self.openPDB)
+		exit.triggered.connect(lambda: self.exitProgram(app))
 
-	window.setLayout(layout)
-	window.show()
-	sys.exit(app.exec_())
+		msg = QLabel('Welcome! Open a PDB file!',parent=window)
+		msg.setAlignment(Qt.AlignCenter)
 
-def openPDB(PDBID):
-	print("{}\\{}.cif".format(os.getcwd(),PDBID))
-	pathtofile = "{}\\{}.cif".format(os.getcwd(),PDBID)
-	if(not os.path.exists(pathtofile)):
-		print("Collecting PDB")
+		self.combobox = QComboBox()
 
-		pdbl = PDBList()
-		pdbl.retrieve_pdb_file(PDBID,pdir=os.getcwd())
-	else:
-		print("PDB file exists")
+		MainWindow.find(self,'*.ent',os.getcwd())
 
-def exitProgram(app):
-	app.quit()
+		textbox = QLineEdit()
+		button = QPushButton("Get PDB")
+		plotbutton = QPushButton("Plot")
+
+		button.clicked.connect(lambda: MainWindow.openPDB(self,textbox.text()))
+		
+		plotbutton.clicked.connect(lambda: MainWindow.plotActual(self.combobox.currentText()))
+
+		layout.addWidget(msg)
+		layout.addWidget(self.combobox)
+		layout.addWidget(textbox)
+		layout.addWidget(button)
+		layout.addWidget(plotbutton)
+
+		window.setLayout(layout)
+		window.show()
+		sys.exit(app.exec_())
+
+	def openPDB(self,PDBID):
+		print("{}\\pdb{}.ent".format(os.getcwd(),PDBID))
+		pathtofile = "{}\\pdb{}.ent".format(os.getcwd(),PDBID)
+		if(not os.path.exists(pathtofile)):
+			print("Collecting PDB")
+
+			pdbl = PDBList()
+			pdbl.retrieve_pdb_file(PDBID,pdir=os.getcwd(),file_format="pdb")
+			self.combobox.addItem(PDBID)
+		else:
+			print("PDB file exists")
+
+	def exitProgram(app):
+		app.quit()
+
+	def find(self,pattern, path):
+	    result = []
+	    for root, dirs, files in os.walk(path):
+	        for name in files:
+	            if fnmatch.fnmatch(name, pattern):
+	                result.append(os.path.join(root, name))
+	                self.combobox.addItem(name[3:7])
+	                print(result)
+	    return result
+	def plotActual(protein):
+		d = Domain()
+		pdb_file_name="pdb{}.ent".format(protein)
+		Domain.getDom(d,pdb_file_name)
+		Domain.plotDomains(d,protein)
 
 
 if __name__ == '__main__':
-	main()
+	program = MainWindow()
+	MainWindow.main(program)
