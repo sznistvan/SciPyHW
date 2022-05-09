@@ -11,6 +11,8 @@ class Domain:
 
     def getDom(self,PBDID):
 
+        print("GetDOM!")
+
         coordx = []
         coordy = []
         coordz = []
@@ -55,9 +57,6 @@ class Domain:
         except FileNotFoundError:
             print("ERROR! PDB file doesn't exist!")
             error=True
-        else:
-            print("ERROR! Usage: python {} PROT.pdb CHAIN".format(sys.argv[0])) 
-            error = True
 
 
         contact_matrix = [[0 for h in range(nres)] for k in range(nres)]
@@ -101,10 +100,14 @@ class Domain:
             outp = "A:"+ str(intradomain_A)+" B:"+str(intradomain_B)+"  AB:"+str(interdomain_AB)+ "{} \t {}".format(pdb_resnum[c],d)+"\n"
             writefile.write(outp)
 
+        print("ok_calculations")
+
 
 
     def plotDomains(self,PBDID):
+        print("PLOTDOM!")
         mt.plot(self.to_plot,color="red")
+        print(self.to_plot)
         mt.title("Domain identification ({})".format(PBDID))
         mt.xlabel("Residues")
         mt.ylabel("IntraA * IntraB / InterAB^2")

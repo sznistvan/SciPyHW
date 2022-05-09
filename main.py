@@ -93,10 +93,11 @@ class MainWindow():
 	                print(result)
 	    return result
 	def plotActual(protein):
+		print("PLOTTING")
 		d = Domain()
 		pdb_file_name="pdb{}.ent".format(protein)
 		Domain.getDom(d,pdb_file_name)
-		Domain.plotDomains(d,protein)
+		d.plotDomains(protein)
 
 
 if __name__ == '__main__':
