@@ -22,10 +22,10 @@ The new pdb ("\*.ent") file is downloaded to the woriking directory.
 
 -----
 With the plot button the user can calculate and plot the results of the selected PDB protein. In the plot, the highest peak represents the domain cutting place in the sequence.
-![plot](/SciPyHW/img/02.png)
+![plot](/img/02.png)
 
 -----
 To view the protein in 3D the user can push the show3D button to start an external python file which opens the jupyter-notebook.
-![command](/SciPyHW/img/03.png)
+![command](/img/03.png)
 
-![3d](/SciPyHW/img/04.png)
+![3d](/img/04.png)
