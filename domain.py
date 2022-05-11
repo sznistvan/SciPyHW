@@ -9,7 +9,7 @@ class Domain:
     def __init__(self):
         self.to_plot = []
 
-    def getDom(self,PBDID):
+    def getDom(self,PBDID,Chain):
 
         print("GetDOM!")
 
@@ -42,7 +42,7 @@ class Domain:
                         # the chain identifier is 1 character
                         chain=line[21:22]
                         # processing only lines of CA atoms in chain E
-                        if atom == "CA" and chain == "A":
+                        if atom == "CA" and chain == Chain:
                             # the append function adds a value to the array. The substring at given positions of the line
                             # should be converted to a floating-point number.
                             coordx.append(float(line[30:37]))
