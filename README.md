@@ -11,6 +11,9 @@ The workload is distributed evenly, but Orsolya will be mainly responsible for t
 while István will be responsible for the domain finder algorithm implementation. 
 For version control and cooperative work, GitHub will be used.
 
+## Install
+pip install -r requirements.txt
+
 ---
 ## Usage
 After starting the program all existing PDB files in the directory is added to the dropdown box. New PDB files can be downloaded after typing the PDB id into the text field and pushing the Get PDB button.
