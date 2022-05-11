@@ -114,7 +114,6 @@ class Domain:
             print("A:", intradomain_A," B:",intradomain_B,"  AB:",interdomain_AB, "{} \t {}".format(pdb_resnum[c],d))
             self.to_plot.append(d)
             outp = "A:"+ str(intradomain_A)+" B:"+str(intradomain_B)+"  AB:"+str(interdomain_AB)+ "{} \t {}".format(pdb_resnum[c],d)+"\n"
-            writefile.write(outp)
 
         print("ok_calculations")
 
