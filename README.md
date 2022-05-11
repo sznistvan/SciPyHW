@@ -14,11 +14,11 @@ For version control and cooperative work, GitHub will be used.
 ---
 ## Usage
 After starting the program all existing PDB files in the directory is added to the dropdown box. New PDB files can be downloaded after typing the PDB id into the text field and pushing the Get PDB button.
-![getpdb](/SciPyHW/img/01.png)
+![getpdb](/img/01.png)
 
 ------
 The new pdb ("\*.ent") file is downloaded to the woriking directory.
-![done](/SciPyHW/img/00.png)
+![done](/img/00.png)
 
 -----
 With the plot button the user can calculate and plot the results of the selected PDB protein. In the plot, the highest peak represents the domain cutting place in the sequence.
