@@ -4,22 +4,33 @@ import numpy
 import matplotlib.pyplot as mt
 import sys
 
-class Domain:
 
+"""
+Domain class for the domain identification functions.
+"""
+class Domain:
+    """
+    Constructor inicializes an array for the results.
+    """
     def __init__(self):
         self.to_plot = []
 
+    """
+    getDom function calculates the connection values between the atoms and stores them in an array.
+    """
     def getDom(self,PBDID,Chain):
 
         print("GetDOM!")
 
+        
+        #Lists for the 3D coordinates for each Calpha atom.
         coordx = []
         coordy = []
         coordz = []
 
         pdb_resnum = []
 
-
+        #the split value set to 8 angstroms
         cutoff = 8
 
         nres = 0
@@ -29,40 +40,39 @@ class Domain:
 
 
         try:
+            #open the pdb file
             pdbfile = open(PBDID,"r")
             if(pdbfile != None):
                 print("ok")
                 for line in pdbfile:
                     if line.startswith("HEADER"):
+                        #store the protein name
                         protein_id=str(line[62:66])
-                    # only ATOM lines will be considered
+                    # only ATOM lines will be read
                     if line.startswith("ATOM"):
-                        # obtaining the atom name and getting rid of spaces
+                        #delete spaces for better handling
                         atom=line[12:15].replace(" ","")
-                        # the chain identifier is 1 character
+                        # read the actual chain id in the line
                         chain=line[21:22]
-                        # processing only lines of CA atoms in chain E
+                        # processing only lines of CA atoms in Chain
                         if atom == "CA" and chain == Chain:
-                            # the append function adds a value to the array. The substring at given positions of the line
-                            # should be converted to a floating-point number.
+                            # store all three coordinates of each atoms
                             coordx.append(float(line[30:37]))
                             coordy.append(float(line[38:45]))
                             coordz.append(float(line[46:53]))
-                            # storing residue numbers, they are integers 
+                            # storing the residue neumbers
                             pdb_resnum.append(int(line[22:27]))
-                            # we have appended a value to each array, they should have equal size and the data
-                            # for the same residue should be accessible at the same index that corresponds to nres 
-                            # (the first index is zero and we set nres to zero above). Now we increase nres to keep track.
+                            
                             nres=nres+1
         except FileNotFoundError:
             print("ERROR! PDB file doesn't exist!")
             error=True
 
-
+        #create a residue x residue large matrix filled with 0s.
         contact_matrix = [[0 for h in range(nres)] for k in range(nres)]
 
 
-
+        #calculate the distances. and update the matrix.
         for i in range(1, nres):
             for j in range(0, i): 
                 distance=((coordx[i]-coordx[j])*(coordx[i]-coordx[j]))+((coordy[i]-coordy[j])*(coordy[i]-coordy[j]))+((coordz[i]-coordz[j])*(coordz[i]-coordz[j]))
@@ -72,7 +82,7 @@ class Domain:
                     contact_matrix[j][i]=1
                     contact_matrix[i][j]=contact_matrix[j][i]
 
-        
+        #iterate through the matrix to find the number of intradomain contacts
         def contacts_intradomain(p, q):
             contacts_i=0
             for r in range(p,q):
@@ -81,6 +91,7 @@ class Domain:
                     
             return contacts_i
             
+        #iterate through to find the interdomain contacts.
         def contacts_interdomain(p1, p2, q1, q2):
             contacts_e=0
             for r in range(p1,q1):
@@ -89,7 +100,12 @@ class Domain:
 
             return contacts_e
 
-        writefile = open("output.txt","a")
+
+        """
+        calculate the DOMAK values for each residue based on intradomain_A*intradomain_B/(interdomain_AB*interdomain_AB)
+        formula.
+        This part writes the values to the to_plot array.
+        """
         for c in range (1, nres-1):
             intradomain_A=contacts_intradomain(0,c)
             intradomain_B=contacts_intradomain(c+1,nres)
@@ -103,7 +119,10 @@ class Domain:
         print("ok_calculations")
 
 
-
+    """
+    plotDomains function creates the plot pane and plots to_plot array content
+    This function is called in the mainwindow's plot button.
+    """
     def plotDomains(self,PBDID):
         print("PLOTDOM!")
         mt.plot(self.to_plot,color="red")
