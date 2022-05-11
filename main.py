@@ -59,6 +59,8 @@ class MainWindow():
 		exit = file.addAction("Exit")
 		open_.triggered.connect(self.openPDB)
 		exit.triggered.connect(lambda: self.exitProgram(app))
+		menubar.setFont(QFont('Century',10))
+		file.setFont(QFont('Century',10))
 
 		msg = QLabel('Welcome! \n Open a PDB file!',parent=window)
 		msg.setAlignment(Qt.AlignCenter)
