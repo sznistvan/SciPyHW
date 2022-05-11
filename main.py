@@ -15,8 +15,16 @@ from Bio.PDB import *
 
 from domain import Domain
 
+"""
+MainWindow class to connect the GUI with the functionalites
+Python GUI: PyQT5
+"""
 class MainWindow():
-
+	
+	"""
+	Constructor.
+	Creates a protein list for PDB id storage and actual protein variable
+	"""
 	def __init__(self):
 		self.protein_list = []
 		self.actualprot = None
@@ -24,6 +32,11 @@ class MainWindow():
 	def get_combobox_value(self):
 		return self.combobox.currentText()
 
+	"""
+	Main function where the PyQt5 functions are called and the main application runs.
+	Layout: VBox
+	Contains:Combobox dropdown menu, Textfield, 3 buttons
+	"""
 	def main(self):
 		app = QApplication(sys.argv)
 
@@ -96,6 +109,11 @@ class MainWindow():
 		window.setLayout(layout)
 		window.show()
 		sys.exit(app.exec_())
+	
+	"""
+	Function for downloading pdb file to the working directory.
+	If file exits ignores the download.
+	"""
 
 	def openPDB(self,PDBID):
 		print("{}\\pdb{}.ent".format(os.getcwd(),PDBID))
@@ -111,6 +129,10 @@ class MainWindow():
 
 	def exitProgram(app):
 		app.quit()
+	
+	"""
+	Find function to update the dropdown menu with all existing pdb *.ent files.
+	"""
 
 	def find(self,pattern, path):
 	    result = []
@@ -121,6 +143,11 @@ class MainWindow():
 	                self.combobox.addItem(name[3:7])
 	                print(result)
 	    return result
+
+	"""
+	The plotActual function finds the first chain in the pdb structure, then passes the
+	pdb id and the chain id to the domain object for processing.
+	"""
 	def plotActual(self,protein):
 		print("PLOTTING")
 		d = Domain()
@@ -136,6 +163,11 @@ class MainWindow():
 		print(structure[0])
 		Domain.getDom(d,pdb_file_name,chains_list[0])
 		Domain.plotDomains(d,protein)
+		
+	"""
+	The show3D function is used for replacing the pdbid in the show3D.py file and to run
+	the 3D visualization in Jupyter-notebook.
+	"""
 
 	def show3D(pdb):
 		python_file = open("show3D.py","r")
@@ -154,7 +186,9 @@ class MainWindow():
 			python_new.write(gl)
 		python_new.close()
 		os.system("start cmd.exe @cmd /k nglview show3D.py --auto")
-
+"""
+Main.
+"""
 
 if __name__ == '__main__':
 	program = MainWindow()
